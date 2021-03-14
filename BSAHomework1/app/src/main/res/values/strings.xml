@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">BSA Homework 1</string>
+    <string name="header_text">Philip</string>
+    <string name="button_text">Calculate</string>
+    <string name="result_label">Result</string>
+    <string name="button_text_navigate">Navigate</string>
+    <string name="empty_string">empty</string>
+</resources>
