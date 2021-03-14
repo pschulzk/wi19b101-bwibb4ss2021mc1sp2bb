@@ -23,16 +23,17 @@ interface Callback {
     void callback(String message); // would be in any signature
 }
 
-public class WebRunnable implements Runnable {
+public class WebRunnableTelegram implements Runnable {
 
     private static final String LOG_TAG = MainActivity.class.getCanonicalName();
+    private static final String API_URL = "https://api.telegram.org/bot1530364130:AAHvyaeKdrO9S7ZD-94FYKIIj4nmtkpOA1M/getUpdates";
     private Callback c;
     private URL url;
 
-    WebRunnable(String url, Callback c) throws KeyManagementException, NoSuchAlgorithmException {
+    WebRunnableTelegram(Callback c) throws KeyManagementException, NoSuchAlgorithmException {
 
         try {
-            this.url = new URL(url);
+            this.url = new URL(API_URL);
 
             try {
                 HttpURLConnection urlConnection = (HttpURLConnection) this.url.openConnection();

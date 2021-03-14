@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,12 +18,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String KEY_TEXT = "MAIN";
     private static final String LOG_TAG = MainActivity.class.getCanonicalName();
 
-    private static final String API_URL = "https://api.telegram.org/bot1530364130:AAHvyaeKdrO9S7ZD-94FYKIIj4nmtkpOA1M/getUpdates";
-
     private Button btnLoadContent;
     private TextView tvResult;
 
-    WebRunnable webRunnableLoadWebResults;
+    WebRunnableTelegram webRunnableLoadWebResultsTelegram;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +41,11 @@ public class MainActivity extends AppCompatActivity {
         btnLoadContent = findViewById(R.id.btn_load_content);
         tvResult = findViewById(R.id.tv_result);
 
-        btnLoadContent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    loadWebResult();
-                } catch (NoSuchAlgorithmException | KeyManagementException e) {
-                    e.printStackTrace();
-                }
+        btnLoadContent.setOnClickListener(view -> {
+            try {
+                loadWebResult();
+            } catch (NoSuchAlgorithmException | KeyManagementException e) {
+                e.printStackTrace();
             }
         });
     }
@@ -68,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadWebResult() throws NoSuchAlgorithmException, KeyManagementException {
-        this.webRunnableLoadWebResults = new WebRunnable(API_URL, this::loadWebResultCallback);
-        new Thread(webRunnableLoadWebResults).start();
+        this.webRunnableLoadWebResultsTelegram = new WebRunnableTelegram(this::loadWebResultCallback);
+        new Thread(webRunnableLoadWebResultsTelegram).start();
         btnLoadContent.setEnabled(false);
     }
 
