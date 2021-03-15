@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(KEY_TEXT, tvResult.getText().toString());
         outState.putInt(KEY_CURRENT_PAGE, currentPage);
@@ -67,14 +67,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(KEY_TEXT)) {
-                tvResult.setText(savedInstanceState.getString(KEY_TEXT));
-            }
-            if (savedInstanceState.containsKey(KEY_CURRENT_PAGE)) {
-                currentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
-                Log.d(LOG_TAG, "Restoring state setting of current page: " + String.valueOf(currentPage));
-            }
+        if (savedInstanceState.containsKey(KEY_TEXT)) {
+            tvResult.setText(savedInstanceState.getString(KEY_TEXT));
+        }
+        if (savedInstanceState.containsKey(KEY_CURRENT_PAGE)) {
+            currentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
+            Log.d(LOG_TAG, "Restoring state setting of current page: " + String.valueOf(currentPage));
         }
     }
 

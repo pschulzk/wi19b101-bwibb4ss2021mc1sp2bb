@@ -27,7 +27,33 @@ public class WebRunnableMagic implements Runnable {
     WebRunnableMagic(int pageSize, int currentPage, Callback c) throws KeyManagementException, NoSuchAlgorithmException {
 
         try {
+            StringBuilder out = new StringBuilder();
+            Boolean connected = false;
             HttpURLConnection urlConnection = createHttpUrlConnectionWithQueryParams(pageSize, currentPage);
+
+            switch (urlConnection.getResponseCode()) {
+                case HttpURLConnection.HTTP_OK:
+                    Log.d(LOG_TAG, "HTTP OK");
+                    connected = true;
+                    break; // fine, go on
+                case HttpURLConnection.HTTP_GATEWAY_TIMEOUT:
+                    Log.d(LOG_TAG, "HTTP Timeout");
+                    out.append("HTTP Error: Timeout");
+                    break;
+                case HttpURLConnection.HTTP_UNAVAILABLE:
+                    Log.d(LOG_TAG, "HTTP Unavailable");
+                    out.append("HTTP Error: Unavailable");
+                    break;
+                default:
+                    Log.d(LOG_TAG, "HTTP Unknown response code");
+                    out.append("HTTP Error: Unknown");
+            }
+
+            if (!connected) {
+                urlConnection.disconnect();
+                return;
+            }
+
             InputStream in = urlConnection.getInputStream();
             Scanner scanner = new Scanner(in);
             scanner.useDelimiter("\\A");
@@ -35,7 +61,7 @@ public class WebRunnableMagic implements Runnable {
             if (!scanner.hasNext()) {
                 return;
             }
-            StringBuilder out = new StringBuilder();
+
             try {
                 JSONObject root = new JSONObject(scanner.next());
                 JSONArray cards = null;
