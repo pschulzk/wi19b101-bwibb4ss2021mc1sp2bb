@@ -31,9 +31,8 @@ public class MagicCard {
                 }
             }
             colorsString.append(" ]");
-            Log.d(LOG_TAG, "!!! MagicCard.colors: " + colorsString.toString());
             this.colors = colorsString.toString();
-
+            Log.d(LOG_TAG, "Card created with name: " + name);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -71,6 +71,7 @@ public class WebRunnableMagic implements Runnable {
     private HttpURLConnection createHttpUrlConnectionWithQueryParams(int pageSize, int currentPage) throws IOException {
         try {
             URL url = new URL(API_URL + "?pageSize=" + pageSize + "&page=" + currentPage);
+            Log.d(LOG_TAG, "Loading data from URL: " + url.toString());
             return (HttpURLConnection) url.openConnection();
         } catch (IOException e) {
             e.printStackTrace();
