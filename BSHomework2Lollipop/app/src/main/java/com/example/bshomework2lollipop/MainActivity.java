@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.os.StrictMode;
-import android.view.View;
+import android.text.method.ScrollingMovementMethod;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -17,11 +17,17 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String KEY_TEXT = "MAIN";
     private static final String LOG_TAG = MainActivity.class.getCanonicalName();
+    /**
+     * Laut Aufgabenstellung sollten wir die default pageSize benutzen, aber mein Rechner/Emulator hat
+     * zu wenig Memory und raucht dan ab. Daher hier bitte Verständnis für den kleineren Wert.
+     */
+    private static final int PAGE_SIZE = 10;
+    private int currentPage = 0;
 
     private Button btnLoadContent;
     private TextView tvResult;
 
-    WebRunnableTelegram webRunnableLoadWebResultsTelegram;
+    WebRunnableMagic webRunnableLoadWebResults;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +38,15 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(KEY_TEXT)) {
-                tvResult.setText(savedInstanceState.getString(KEY_TEXT));
-            }
-        }
-
         btnLoadContent = findViewById(R.id.btn_load_content);
         tvResult = findViewById(R.id.tv_result);
+        tvResult.setMovementMethod(new ScrollingMovementMethod());
+
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(KEY_TEXT)) {
+                tvResult.setText(savedInstanceState.getString(KEY_TEXT).toString());
+            }
+        }
 
         btnLoadContent.setOnClickListener(view -> {
             try {
@@ -62,9 +69,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadWebResult() throws NoSuchAlgorithmException, KeyManagementException {
-        this.webRunnableLoadWebResultsTelegram = new WebRunnableTelegram(this::loadWebResultCallback);
-        new Thread(webRunnableLoadWebResultsTelegram).start();
+        this.webRunnableLoadWebResults = new WebRunnableMagic(PAGE_SIZE, currentPage, this::loadWebResultCallback);
+        new Thread(webRunnableLoadWebResults).start();
         btnLoadContent.setEnabled(false);
+        currentPage++;
     }
 
 }

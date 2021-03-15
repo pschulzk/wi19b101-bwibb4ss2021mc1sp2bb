@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BSHomework2Lollipop</string>
+    <string name="load_cards">Load Cards</string>
+    <string name="no_data_loaded">No Data loaded</string>
 </resources>
