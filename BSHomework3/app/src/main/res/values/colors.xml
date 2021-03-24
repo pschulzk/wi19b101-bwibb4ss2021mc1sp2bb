@@ -7,8 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="colorbulbasaur">#5f8470</color>
-    <color name="colorcharmander">#eaab7d</color>
-    <color name="colorsquirtle">#8ec4d1</color>
-    <color name="colorpikachu">#e2c270</color>
+    <color name="blue">#5f8470</color>
+    <color name="red">#eaab7d</color>
+    <color name="green">#8ec4d1</color>
+
 </resources>

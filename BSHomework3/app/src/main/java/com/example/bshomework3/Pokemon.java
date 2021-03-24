@@ -1,6 +1,9 @@
 package com.example.bshomework3;
 
-public class Pokemon {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Pokemon implements Parcelable {
 
     private String name;
     private String type;
@@ -11,6 +14,24 @@ public class Pokemon {
         this.type = type;
         this.color = color;
     }
+
+    protected Pokemon(Parcel in) {
+        name = in.readString();
+        type = in.readString();
+        color = in.readInt();
+    }
+
+    public static final Creator<Pokemon> CREATOR = new Creator<Pokemon>() {
+        @Override
+        public Pokemon createFromParcel(Parcel in) {
+            return new Pokemon(in);
+        }
+
+        @Override
+        public Pokemon[] newArray(int size) {
+            return new Pokemon[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -36,4 +57,15 @@ public class Pokemon {
         this.color = color;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(type);
+        parcel.writeInt(color);
+    }
 }

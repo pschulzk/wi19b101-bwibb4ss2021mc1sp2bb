@@ -12,12 +12,14 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemViewHolder> {
+public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemViewHolder> implements View.OnClickListener {
 
-    private List<Pokemon> mItems;
+    private List<MagicCard> mItems;
     private Context mContext;
+    private ListItemClickListener mlistItemClickListener;
+    private ItemViewHolder itemViewHolder;
 
-    public ListAdapter(List<Pokemon> mItems) {
+    public ListAdapter(List<MagicCard> mItems) {
         this.mItems = mItems;
     }
 
@@ -30,7 +32,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemViewHolder
 
         View view = inflater.inflate(R.layout.list_item, parent, false);
 
-        return new ItemViewHolder(view);
+        this.itemViewHolder = new ItemViewHolder(view);
+        return itemViewHolder;
     }
 
     @Override
@@ -43,22 +46,44 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemViewHolder
         return mItems == null ? 0 : mItems.size();
     }
 
+    interface ListItemClickListener {
+        void onListItemClick(MagicCard item);
+    }
+
+    public void setOnListItemClickListener(ListItemClickListener listItemClickListener) {
+        mlistItemClickListener = listItemClickListener;
+    }
+
+    public void swapData(List<MagicCard> p) {
+        mItems = p;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (mlistItemClickListener != null) {
+            int clickIndex = itemViewHolder.getAdapterPosition();
+            MagicCard item = mItems.get(clickIndex);
+            mlistItemClickListener.onListItemClick(item);
+        }
+    }
+
     public class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvName;
-        private TextView tvType;
-        private LinearLayout llItem;
+        private final TextView tvName;
+        private final TextView tvProp;
+        private final LinearLayout llItem;
 
         ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tv_name);
-            tvType = itemView.findViewById(R.id.tv_type);
+            tvProp = itemView.findViewById(R.id.tv_type);
             llItem = itemView.findViewById(R.id.ll_layout);
         }
 
         public void bind(int position) {
             tvName.setText(mItems.get(position).getName());
-            tvName.setText(mItems.get(position).getType());
+            tvProp.setText(mItems.get(position).getRarity());
             llItem.setBackgroundResource(mItems.get(position).getColor());
         }
     }
