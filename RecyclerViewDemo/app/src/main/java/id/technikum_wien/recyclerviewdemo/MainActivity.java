@@ -51,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.setOnListItemClickListener(new ListAdapter.ListItemClickListener() {
             @Override
             public void onListItemClick(Pokemon item) {
-                deleteInput(item);
+                // deleteInput(item);
+                upperCaseInput(item);
+                mAdapter.swapData(getContentFromDb());
             }
         });
 
@@ -62,6 +64,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void upperCaseInput(Pokemon item) {
+        ContentValues values = new ContentValues();
+        values.put(PokemonContractClass.PokemonEntry.COLUMN_NAME_NAME, item.getName().toUpperCase());
+
+        String selection = PokemonContractClass.PokemonEntry.COLUMN_NAME_NAME + " LIKE ?";
+        String[] args = { item.getName() };
+        int changedRows = db.update(
+                PokemonContractClass.PokemonEntry.TABLE_NAME,
+                values,
+                selection,
+                args
+        );
     }
 
     private void deleteInput(Pokemon item) {
