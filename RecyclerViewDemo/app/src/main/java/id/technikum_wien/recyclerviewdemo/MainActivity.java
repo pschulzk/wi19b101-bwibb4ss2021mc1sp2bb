@@ -33,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        dbHelper = new PokemonDbHelper(this);
+        db = dbHelper.getWritableDatabase();
+
         RecyclerView list = findViewById(R.id.rv_list);
         btn_swap = findViewById(R.id.btn_swap);
 
@@ -48,9 +51,7 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.setOnListItemClickListener(new ListAdapter.ListItemClickListener() {
             @Override
             public void onListItemClick(Pokemon item) {
-                Intent i = new Intent(MainActivity.this,DetailActivity.class);
-                i.putExtra(DetailActivity.EXTRA_POKEMON_KEY, item);
-                startActivity(i);
+                deleteInput(item);
             }
         });
 
@@ -61,6 +62,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void deleteInput(Pokemon item) {
+        String selection = PokemonContractClass.PokemonEntry.COLUMN_NAME_NAME + " LIKE ?";
+        String[] args = {
+                item.getName(),
+                String.valueOf(item.getWeight()),
+        };
+        int deletedRows = db.delete(
+                PokemonContractClass.PokemonEntry.TABLE_NAME,
+                selection,
+                args
+        );
     }
 
     private List<Pokemon> getContentFromDb() {
@@ -99,8 +113,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void storeList(List<Pokemon> lst_pokemon) {
-        dbHelper = new PokemonDbHelper(this);
-        db = dbHelper.getWritableDatabase();
 
         Cursor cursor = db.query(
                 PokemonContractClass.PokemonEntry.TABLE_NAME,
